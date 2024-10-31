@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>贪吃蛇游戏</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <div class="container noselect">
+        <div id="author">
+            <h1>软件基础实践-贪吃蛇</h1>
+        </div>
+        <div id="canvas"></div>
+        <div id="ui">
+            <h2>游戏得分 <span id="score">00</span></h2>
+            <br>
+
+            <span class="speedSelector">选择游戏速度:</span>
+            <select id="speedSelector">
+                <option value="70">入门</option>
+                <option value="35" selected>简单</option>
+                <option value="20">中等</option>
+                <option value="10">困难</option>
+            </select>
+        </div>
+        <button id="replay">
+            <i class="fas fa-play"></i>
+            重新开始
+        </button>
+    </div>
+    </div>
+</body>
+
+</html>
