@@ -1,1 +1,2 @@
-# Snake-Game using HTML, CSS and JavaScript
+# NJUPT Software Engineering Practice Week
+Snake Game With JavaScript
