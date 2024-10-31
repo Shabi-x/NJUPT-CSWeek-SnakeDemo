@@ -2,7 +2,6 @@
 let dom_replay = document.querySelector("#replay");
 let dom_score = document.querySelector("#score");
 let dom_canvas = document.createElement("canvas");
-// @ts-ignore
 document.querySelector("#canvas").appendChild(dom_canvas);
 let CTX = dom_canvas.getContext("2d");
 
@@ -16,7 +15,7 @@ let snake,
   cellSize,
   isGameOver = false,
   tails = [],
-  score = 00,
+  score = "00",
   maxScore = window.localStorage.getItem("maxScore") || undefined,
   particles = [],
   splashingParticleCount = 20,
