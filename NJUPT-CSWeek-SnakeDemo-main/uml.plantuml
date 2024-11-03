@@ -1,0 +1,71 @@
+@startuml SnakeGameUML
+
+class Vec {
+    - x: Number
+    - y: Number
+    + add(v: Vec): Vec
+    + mult(v: Number | Vec): Vec
+}
+
+class Snake {
+    - pos: Vec
+    - dir: Vec
+    - size: Number
+    - color: String
+    - history: Vec[]
+    - total: Number
+    - delay: Number
+    + draw(): void
+    + walls(): void
+    + controlls(): void
+    + selfCollision(): void
+    + update(): void
+}
+
+class Food {
+    - pos: Vec
+    - color: String
+    - size: Number
+    + draw(): void
+    + spawn(): void
+}
+
+class Particle {
+    - pos: Vec
+    - color: String
+    - size: Number
+    - ttl: Number
+    - gravity: Number
+    - vel: Vec
+    + draw(): void
+    + update(): void
+}
+
+class helpers {
+    + isCollision(v1: Vec, v2: Vec): boolean
+    + garbageCollector(): void
+    + drawGrid(): void
+    + randHue(): Number
+    + hsl2rgb(hue: Number, saturation: Number, lightness: Number): Number[]
+    + lerp(start: Number, end: Number, t: Number): Number
+}
+
+class KEY {
+    - ArrowUp: boolean
+    - ArrowRight: boolean
+    - ArrowDown: boolean
+    - ArrowLeft: boolean
+    + resetState(): void
+    + listen(): void
+}
+
+Vec <|-- Snake
+Vec <|-- Food
+Vec <|-- Particle
+Snake --> Food : eats >
+Snake --> Particle : generates >
+Snake ..> helpers : uses >
+Food ..> Snake : referenced by >
+KEY ..> Snake : controls >
+
+@enduml
