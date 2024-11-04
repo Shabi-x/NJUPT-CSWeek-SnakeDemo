@@ -144,6 +144,14 @@ let helpers = {
   lerp(start, end, t) {
     return start * (1 - t) + end * t;
   },
+  randomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  },
 };
 
 let KEY = {
@@ -182,7 +190,7 @@ class Snake {
     this.pos = new helpers.Vec(W / 2, H / 2);
     this.dir = new helpers.Vec(0, 0);
     this.size = W / cells;
-    this.color = "lightgreen";
+    this.color = helpers.randomColor();
     this.history = [];
     this.total = 1;
     this.delay = parseInt(document.getElementById("speedSelector").value);
@@ -206,14 +214,15 @@ class Snake {
 
         CTX.lineWidth = 1;
 
-        CTX.fillStyle = "lightgreen";
+        CTX.fillStyle = this.color;
 
         CTX.fillRect(x, y, this.size, this.size);
 
-        CTX.strokeStyle = "black";
+        // CTX.strokeStyle = "black";
 
         CTX.strokeRect(x, y, this.size, this.size);
       }
+      CTX.globalAlpha = 1;
     }
   }
 
@@ -286,7 +295,7 @@ class Food {
       ~~(Math.random() * cells) * cellSize,
       ~~(Math.random() * cells) * cellSize
     );
-    this.color = "red";
+    this.color = "#ffffff"; //食物的颜色
     this.size = cellSize;
   }
 
@@ -295,27 +304,19 @@ class Food {
 
     CTX.globalCompositeOperation = "lighter";
 
-    CTX.shadowColor = this.color;
-
-    CTX.fillStyle = this.color;
+    CTX.strokeStyle = "#C7C7C7FF";
+    CTX.lineWidth = this.size / 10;
+    CTX.lineJoin = "round";
+    CTX.fillStyle = "#ffffff";
 
     CTX.beginPath();
-
-    CTX.arc(
-      x + this.size / 2,
-      y + this.size / 2,
-      this.size / 2,
-      0,
-      Math.PI * 2
-    );
-
+    CTX.rect(x, y, this.size, this.size);
+    CTX.stroke();
     CTX.fill();
 
     CTX.globalCompositeOperation = "source-over";
-
-    CTX.shadowBlur = 0;
+    CTX.lineJoin = "miter"; // 重置线连接处为默认值
   }
-
   spawn() {
     let randX = ~~(Math.random() * cells) * this.size;
     let randY = ~~(Math.random() * cells) * this.size;
@@ -375,6 +376,9 @@ class Particle {
 function incrementScore() {
   score++;
   dom_score.innerText = score.toString().padStart(2, "0");
+  if (score % 5 === 0) {
+    snake.color = helpers.randomColor();
+  }
 }
 
 function particleSplash() {

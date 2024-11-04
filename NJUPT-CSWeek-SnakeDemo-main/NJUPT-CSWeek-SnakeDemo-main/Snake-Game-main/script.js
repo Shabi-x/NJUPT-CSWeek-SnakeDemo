@@ -13,10 +13,9 @@ const W = (dom_canvas.width = 500);
 const H = (dom_canvas.height = 500);
 
 // 添加选择器元素
-let modeSelector = document.getElementById("modeSelector"); 
+let modeSelector = document.getElementById("modeSelector");
 let timeSelectorSpan = document.querySelector(".timeSelector");
 let timeSelector = document.getElementById("timeSelector");
-
 
 let snake,
   food,
@@ -155,6 +154,14 @@ let helpers = {
   lerp(start, end, t) {
     return start * (1 - t) + end * t;
   },
+  randomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  },
 };
 
 let KEY = {
@@ -193,7 +200,7 @@ class Snake {
     this.pos = new helpers.Vec(W / 2, H / 2);
     this.dir = new helpers.Vec(0, 0);
     this.size = W / cells;
-    this.color = "lightgreen";
+    this.color = helpers.randomColor();
     this.history = [];
     this.total = 1;
     this.delay = parseInt(document.getElementById("speedSelector").value);
@@ -217,7 +224,7 @@ class Snake {
 
         CTX.lineWidth = 1;
 
-        CTX.fillStyle = "lightgreen";
+        CTX.fillStyle = this.color;
 
         CTX.fillRect(x, y, this.size, this.size);
 
@@ -269,7 +276,7 @@ class Snake {
     }
   }
 
-  obstacleCollision(){
+  obstacleCollision() {
     if (helpers.isCollision(this.pos, obstacle.pos)) {
       isGameOver = true; // 碰到障碍物
     }
@@ -353,7 +360,7 @@ class Obstacle {
   constructor() {
     this.pos = new helpers.Vec(0, 0);
     this.color = "black"; // 障碍物的颜色
-    this.size = cellSize; 
+    this.size = cellSize;
   }
 
   draw() {
@@ -371,7 +378,10 @@ class Obstacle {
       randY = ~~(Math.random() * cells) * this.size;
 
       // 检查生成位置是否与食物和蛇的历史位置重叠
-      validPosition = !helpers.isCollision(new helpers.Vec(randX, randY), foodPos);
+      validPosition = !helpers.isCollision(
+        new helpers.Vec(randX, randY),
+        foodPos
+      );
       for (let path of snakeHistory) {
         if (helpers.isCollision(new helpers.Vec(randX, randY), path)) {
           validPosition = false;
@@ -430,6 +440,9 @@ class Particle {
 function incrementScore() {
   score++;
   dom_score.innerText = score.toString().padStart(2, "0");
+  if (score % 5 === 0) {
+    snake.color = helpers.randomColor();
+  }
 }
 
 function particleSplash() {
@@ -455,7 +468,8 @@ function initialize() {
   obstacle.spawn(food.pos, snake.history); // 生成初始障碍物
 
   if (isFirstStart) {
-    document.getElementById("replay").innerHTML = '<i class="fas fa-play"></i> 开始游戏';
+    document.getElementById("replay").innerHTML =
+      '<i class="fas fa-play"></i> 开始游戏';
   }
 
   dom_replay.addEventListener("click", reset, false);
@@ -488,7 +502,7 @@ function loop() {
     helpers.drawGrid();
     snake.update();
     food.draw();
-    obstacle.draw()
+    obstacle.draw();
     for (let p of particles) {
       p.update();
     }
@@ -549,7 +563,8 @@ function reset() {
   document.getElementById("remainingTime").innerText = timer; // 更新显示的时间
 
   isFirstStart = false; // 游戏开始后，将标志设置为 false
-  document.getElementById("replay").innerHTML = '<i class="fas fa-play"></i> 重新开始';
+  document.getElementById("replay").innerHTML =
+    '<i class="fas fa-play"></i> 重新开始';
 
   // 启用模式和难度/时间选择器
   modeSelector.disabled = false;
@@ -561,7 +576,7 @@ function reset() {
 
   // 再次添加键盘监听事件
   document.addEventListener("keydown", disableSelectorsOnGameStart);
-  
+
   cancelAnimationFrame(requestID);
   loop();
 }
@@ -585,14 +600,14 @@ function updateUI() {
   const mode = modeSelector.value; // 获取当前选择的模式
   if (mode === "timed") {
     // 显示时间选择器
-    timeSelectorSpan.style.display = 'inline';
-    timeSelector.style.display = 'inline';
+    timeSelectorSpan.style.display = "inline";
+    timeSelector.style.display = "inline";
     // 显示计时器
     document.getElementById("timer").style.display = "inline";
   } else {
     // 隐藏时间选择器
-    timeSelectorSpan.style.display = 'none'; 
-    timeSelector.style.display = 'none'; 
+    timeSelectorSpan.style.display = "none";
+    timeSelector.style.display = "none";
     // 隐藏计时器
     document.getElementById("timer").style.display = "none";
   }
@@ -604,13 +619,13 @@ function startTimer() {
   document.getElementById("timer").style.display = "inline"; // 显示计时器
 
   const interval = setInterval(() => {
-      if (timer > 0) {
-          timer--;
-          updateRemainingTime();
-      } else {
-          clearInterval(interval); // 清除定时器
-          isGameOver = true; // 时间到，游戏结束
-      }
+    if (timer > 0) {
+      timer--;
+      updateRemainingTime();
+    } else {
+      clearInterval(interval); // 清除定时器
+      isGameOver = true; // 时间到，游戏结束
+    }
   }, 1000); // 每秒更新
 }
 
