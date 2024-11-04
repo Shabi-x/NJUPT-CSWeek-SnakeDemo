@@ -20,6 +20,7 @@ let timeSelector = document.getElementById("timeSelector");
 
 let snake,
   food,
+  obstacle,
   currentHue,
   cells = 20,
   cellSize,
@@ -268,6 +269,12 @@ class Snake {
     }
   }
 
+  obstacleCollision(){
+    if (helpers.isCollision(this.pos, obstacle.pos)) {
+      isGameOver = true; // 碰到障碍物
+    }
+  }
+
   update() {
     this.walls();
     this.draw();
@@ -277,6 +284,7 @@ class Snake {
         incrementScore();
         particleSplash();
         food.spawn();
+        obstacle.spawn(food.pos, this.history); // 生成新障碍物
         this.total++;
       }
       this.history[this.total - 1] = new helpers.Vec(this.pos.x, this.pos.y);
@@ -287,6 +295,7 @@ class Snake {
       this.delay = parseInt(document.getElementById("speedSelector").value); // 每次更新速度
       this.total > 3 ? this.selfCollision() : null;
     }
+    this.obstacleCollision();
   }
 }
 
@@ -298,6 +307,7 @@ class Food {
     );
     this.color = "red";
     this.size = cellSize;
+    this.spawn(); // 生成初始食物
   }
 
   draw() {
@@ -335,6 +345,41 @@ class Food {
       }
     }
     this.color = "red";
+    this.pos = new helpers.Vec(randX, randY);
+  }
+}
+
+class Obstacle {
+  constructor() {
+    this.pos = new helpers.Vec(0, 0);
+    this.color = "black"; // 障碍物的颜色
+    this.size = cellSize; 
+  }
+
+  draw() {
+    let { x, y } = this.pos;
+    CTX.fillStyle = this.color;
+    CTX.fillRect(x, y, this.size, this.size);
+  }
+
+  spawn(foodPos, snakeHistory) {
+    let randX, randY;
+    let validPosition = false;
+
+    while (!validPosition) {
+      randX = ~~(Math.random() * cells) * this.size;
+      randY = ~~(Math.random() * cells) * this.size;
+
+      // 检查生成位置是否与食物和蛇的历史位置重叠
+      validPosition = !helpers.isCollision(new helpers.Vec(randX, randY), foodPos);
+      for (let path of snakeHistory) {
+        if (helpers.isCollision(new helpers.Vec(randX, randY), path)) {
+          validPosition = false;
+          break;
+        }
+      }
+    }
+
     this.pos = new helpers.Vec(randX, randY);
   }
 }
@@ -406,6 +451,8 @@ function initialize() {
   cellSize = W / cells;
   snake = new Snake();
   food = new Food();
+  obstacle = new Obstacle(); // 实例化障碍物
+  obstacle.spawn(food.pos, snake.history); // 生成初始障碍物
 
   if (isFirstStart) {
     document.getElementById("replay").innerHTML = '<i class="fas fa-play"></i> 开始游戏';
@@ -441,6 +488,7 @@ function loop() {
     helpers.drawGrid();
     snake.update();
     food.draw();
+    obstacle.draw()
     for (let p of particles) {
       p.update();
     }
