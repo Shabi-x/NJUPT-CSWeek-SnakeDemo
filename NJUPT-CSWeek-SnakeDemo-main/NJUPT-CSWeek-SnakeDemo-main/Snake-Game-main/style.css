@@ -1,0 +1,86 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  font-family: "Poppins", sans-serif;
+  color: #f4f1de; /* 浅灰色文字，以确保可读性 */
+  background-color: #3b5133; /* 深绿色背景 */
+}
+canvas {
+  background-color: #5c7a5d; /* 较浅的绿色，用于canvas背景 */
+}
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+#ui {
+  text-align: center;
+  font-size: 25px;
+  margin-top: 10px;
+}
+#speedSelector, #modeSelector, #timeSelector {
+  text-align: center;
+  font-size: 25px;
+}
+.speedSelector, .modeSelector, .timeSelector {
+  text-align: center;
+  font-size: 25px;
+}
+#score {
+  margin-top: 10px;
+  font-size: 40px;
+  font-weight: 800;
+}
+#timer {
+  font-size: 25px;
+  color: #ff9800; /* 橙色 */
+}
+.noselect {
+  user-select: none;
+}
+#replay {
+  margin: 20px 0;
+  font-size: 25px;
+  padding: 10px 20px;
+  background: #ff9800; /* 橙色背景 */
+  border: none;
+  color: #fff; /* 白色文字 */
+  border-radius: 20px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+#replay:hover{
+  background: #ffc107; /* 深橙色背景 */
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (max-width: 600px) {
+  #replay {
+    margin-bottom: 20px;
+  }
+  #replay,
+  h2 {
+    transform: rotate(0deg);
+  }
+  #ui {
+    flex-flow: row wrap;
+    margin-bottom: 20px;
+  }
+  #score {
+    margin-top: 0;
+    margin-left: 20px;
+  }
+  .container {
+    flex-flow: column wrap;
+  }
+}
+#author {
+  text-align: center;
+  padding-bottom: 10px;
+}
